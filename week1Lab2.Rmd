@@ -1,0 +1,51 @@
+---
+title: "week1Lab2"
+output: html_document
+---
+
+Chargement de données sauvegardées
+```{r}
+load("./outputData/smp_v1.rda")
+```
+
+```{r}
+table(smp$prof == "agriculteur")
+```
+
+Filtrage
+```{r}
+smp$age[which(smp$prof == "agriculteur")]
+```
+
+Requêtage avec conditions
+```{r}
+subset(smp, prof == "agriculteur" & n.enfant > 2, c(age, duree, n.enfant))
+```
+
+```{r}
+subset(smp, prof == "agriculteur" & n.enfant > 2 & complete.cases(duree), c("age", "duree", "n.enfant"))
+```
+
+Tableaux d'effectif
+```{r}
+tab <- table(smp$n.enfant.cat)
+tab / sum(tab)
+```
+
+```{r}
+round(prop.table(tab), 3)
+```
+
+Graphiques
+```{r}
+barplot(prop.table(tab) * 100, ylab = "%", ylim = c(0, 30), las = 1)
+```
+
+
+```{r}
+hist(smp$age, nclass = 8, prob = TRUE)
+lines(density(smp$age, na.rm = TRUE))
+```
+
+
+

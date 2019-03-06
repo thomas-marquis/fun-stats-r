@@ -1,0 +1,78 @@
+---
+title: "week1Exos"
+output: html_document
+---
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+```{r}
+min(head(smp$age, n = 20))
+```
+
+```{r}
+head(smp$age, n = 20)
+```
+
+```{r}
+head(smp$abus, n = 20)
+```
+
+
+```{r}
+abusFact <- factor(smp$abus, labels = c("Non", "Oui"))
+head(abusFact, n = 20)
+```
+
+```{r}
+tabWithNA <- table(smp$n.enfant, useNA = "always")
+tabWithoutNA <- table(smp$n.enfant)
+```
+
+```{r}
+sum(tabWithNA)
+```
+```{r}
+sum(tabWithoutNA)
+```
+
+```{r}
+summary(smp$dur.interv)
+```
+
+
+```{r}
+factor(smp$n.fratrie)
+```
+
+
+```{r}
+sub <- subset(smp, ecole %in% c(1, 2, 3), "ecole")
+tab <- table(sub)
+sum(tab)
+```
+
+```{r}
+subProf <- subset(smp, prof == "sans emploi", "prof")
+table(subProf)
+```
+
+
+```{r}
+smp$age[1:10]
+```
+
+```{r}
+sum(complete.cases(smp$n.enfant))
+sum(smp$n.enfant)
+```
+
+```{r}
+mean(head(smp$age, n = 10))
+```
+
+```{r}
+median(smp$dur.interv[1:300], na.rm = TRUE)
+```
+

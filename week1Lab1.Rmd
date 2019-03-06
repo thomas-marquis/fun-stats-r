@@ -1,0 +1,41 @@
+---
+title: "week1Lab1"
+output: html_document
+---
+
+
+
+```{r}
+smpPath <- "./data/smp2.csv"
+
+smp <- read.csv2(smpPath)
+
+agMin <- min(smp$age, na.rm = TRUE)
+
+modAbus <- unique(smp$abus)
+efAbus <- table(smp$abus, useNA = "always")
+
+factAbus <- factor(smp$abus, levels = c(0, 1), labels = c("Non", "Oui"))
+```
+
+
+```{r}
+smp$n.enfant.cat <- factor(smp$n.enfant)
+table(smp$n.enfant.cat)
+```
+
+Agrégation d'effectifs de plusieurs classes :
+```{r}
+levels(smp$n.enfant.cat)[6:13] <- "5+"
+table(smp$n.enfant.cat)
+```
+
+```{r}
+savePath <- "./outputData/smp_v1.rda"
+saveHistoryPath <- "./outputData/commandes.R"
+
+save(smp, file = savePath)
+
+savehistory(saveHistoryPath)
+```
+
