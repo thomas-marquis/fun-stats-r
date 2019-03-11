@@ -1,0 +1,21 @@
+---
+title: "week1ExoPairs"
+output: html_document
+---
+
+
+## 1)
+
+```{r}
+data <- read.csv2("./data/satisfaction_hopital.csv", sep = ";")
+
+```
+
+## 2)
+
+
+## 3)
+
+## 4)
+
+
