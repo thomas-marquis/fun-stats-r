@@ -1,0 +1,97 @@
+---
+title: "week2"
+output: html_document
+---
+
+DEPENDENCIES
+```{r}
+install.packages("prettyR")
+library(prettyR)
+
+install.packages("binom")
+library(binom)
+```
+
+
+CONSTANTSS
+```{r}
+pathSmp1 <- "./data/smp1.csv"
+```
+
+
+IMPORT DATA
+```{r}
+smp <- read.csv2(pathSmp1)
+```
+
+
+intervalle de confience à la main
+```{r}
+descr <- describe(smp$age)
+descr_2 <- descr$Numeric$x
+age_mean <- descr_2["mean"]
+
+get_intervall <- function(mean, sd, valid.n, direction = "down") {
+  d <- -1
+  if (direction == "up") {
+    d <- 1
+  }
+  return(mean + d * 1.96 * sd / sqrt(valid.n))
+}
+
+down <- get_intervall(age_mean, descr_2["valid.n"], descr_2["sd"])
+up <- get_intervall(age_mean, descr_2["valid.n"], descr_2["sd"], "up")
+```
+
+```{r}
+binom.confint(3, 10, methods = "all")
+```
+Method = "exact" => la meilleure
+
+
+
+## Coef de correlation de Pearson (r)
+
+```{r}
+plot(jitter(smp$age), jitter(smp$n.enfant))
+```
+
+r =
+```{r}
+cor(smp$age, smp$n.enfant, use = "complete.obs")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

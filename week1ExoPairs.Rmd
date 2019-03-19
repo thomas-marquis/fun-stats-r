@@ -8,8 +8,39 @@ output: html_document
 
 ```{r}
 data <- read.csv2("./data/satisfaction_hopital.csv", sep = ";")
-
 ```
+
+Les 3 variables catégorielles :
+
+- service
+- profession
+- sexe
+
+```{r}
+sexe_levels <- c(0, 1)
+sexe_labels <- c("homme", "femme")
+
+prof_levels <- 1:8
+prof_labels <- c("agriculteur", "artisant, commercant, chef d'entreprise", "cadre", "prof intermédiaire", "employé", "ouvrier", "étudiant, militaire, chômeur", "autre")
+
+sexe <- table(factor(data$sexe, levels = sexe_levels, labels = sexe_labels))
+profession <- table(factor(data$profession, levels = prof_levels, labels = prof_labels))
+service <- table(factor(data$service))
+```
+
+```{r}
+print(sexe)
+```
+
+
+
+Bonus :
+```{r}
+barplot(table(profession), las = 2)
+barplot(table(service))
+barplot(table(sexe))
+```
+
 
 ## 2)
 
