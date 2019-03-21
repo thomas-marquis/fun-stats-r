@@ -10,6 +10,9 @@ library(prettyR)
 
 install.packages("binom")
 library(binom)
+
+install.packages("Epi")
+library(Epi)
 ```
 
 
@@ -61,8 +64,20 @@ r =
 cor(smp$age, smp$n.enfant, use = "complete.obs")
 ```
 
+## Force de liaison entre 2 variables binaires
 
+```{r}
+smp$ed.b <- ifelse(smp$ed > 2, 1, 0)
 
+# vérification :
+table(smp$ed.b, smp$ed, deparse.level = 2, useNA = "always")
+```
+
+Table de comparaison 2 à 2 :
+(le "1 -" c'est parce que twoby2 considère que 1 c'est la présence d'anomalie et 0 non)
+```{r}
+twoby2(1 - smp$ed.b, 1 - smp$dep.cons)
+```
 
 
 
