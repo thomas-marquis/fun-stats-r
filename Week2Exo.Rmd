@@ -1,0 +1,78 @@
+---
+title: "Week2Exo"
+output: html_document
+---
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+
+1. Pour une variable qualitative z à 3 modalités {A, B, C}, la commande which(z == A) renvoie
+```{r}
+which(smp$prof == "agriculteur")
+```
+
+
+2. Pour représenter sous forme d'un diagramme en barres la distribution d'effectifs selon les modalités d'une variable qualitative z, quelle commande pouvons-nous utiliser ?
+```{r}
+barplot(table(smp$n.enfant))
+```
+
+
+3. La commande subset() admet 3 arguments. À quoi correspond le 3ème argument ?
+```{r}
+subset(smp, n.enfant == 2, c("prof", "ecole", "ed"))
+```
+
+
+4. Quel est le nombre moyen d'enfants (variable n.enfant) chez les individus diagnostiqués comme dépressifs (dep.cons = 1) (2 chiffres après la virgule) ?
+```{r}
+mean(subset(smp, dep.cons == 1, "n.enfant")$n.enfant, na.rm = TRUE)
+```
+
+
+
+
+5. Donner la borne supérieure de l'intervalle interquartile pour la variable duree chez les individus dont l'âge est strictement inférieur à 35 ans (2 chiffres après la virgule). Borne supérieure :
+```{r}
+durees <- subset(smp, age < 35 & !is.na(duree), "duree")
+
+summary(durees$duree)
+```
+
+
+6. Nous souhaitons estimer la durée moyenne d'intervention (dur.interv) chez les individus ayant au moins un antécédent de tentative de suicide (suicide.past = 1). Quelle commande pouvons-nous utiliser ?
+```{r}
+d <- smp[smp$suicide.past == 1, 'dur.interv']
+
+mean(d, na.rm = TRUE)
+```
+
+
+
+7. À partir du data frame smp, nous souhaitons recoder l’âge (variable age) en variable catégorielle en considérant 4 intervalles de classe dont les bornes intermédiaires sont définies à partir des 1er, 2ème et 3ème quartiles.
+
+Les bornes inférieures et supérieures de la première et dernière classe seront naturellement les valeurs minimale et maximale observées pour la variable age. À l'exception de la première classe dont les deux bornes d'intervalle seront fermées (c'est-à-dire que les bornes seront inclues dans l'intervalle), les bornes inférieures des classes suivantes (2 à 4) seront ouvertes, et les bornes supérieures fermées. Indiquer l'effectif associé à la 3ème classe ainsi constituée.
+
+Effectif associé à la 3ème classe :
+```{r}
+age_summary <- summary(smp$age)
+
+first_qt <- age_summary[2][1]
+sec_qt <- age_summary[3]
+third_qt <- age_summary[5]
+
+smp$age.f <- smp$age
+
+smp$age.f[smp$age <= first_qt] <- "jeune"
+smp$age.f[smp$age > first_qt & smp$age <= sec_qt] <- "moins jeune"
+smp$age.f[smp$age > sec_qt & smp$age <= third_qt] <- "presque vieux"
+smp$age.f[smp$age > third_qt] <- "vieux"
+
+table(smp$age.f)
+```
+
+
+

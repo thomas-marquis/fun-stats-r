@@ -3,7 +3,45 @@ title: "week3"
 output: html_document
 ---
 
-```{r}
 
+
+```{r, echo=FALSE}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+## Comparaison de 2 pourcentages
+
+
+Test du Chi 2 :
+condition de validité vérfidé par R (pourcentage pas trop proche de 0, ...)
+Si pas valide, possible d'utiliser le test exact de Fisher
+
+
+TODO : comprendre pourquoi on fait ça :
+```{r}
+tab <- table(smp$ed, smp$dep.cons, deparse.level = 2)
+
+prop.table(tab, margin = 1)
+```
+
+
+```{r}
+prop.table(tab, margin = 2)
+```
+
+
+```{r}
+chi_res <- chisq.test(smp$ed, smp$dep.cons, correct = FALSE)
+
+chi_res$p.value
+```
+
+Correlation forte
+
+
+Test exact de Fisher (**juste pour voir car pas besoin ici**) :
+```{r}
+fisher.test(smp$ed, smp$dep.cons)
 ```
 
