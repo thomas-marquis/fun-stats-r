@@ -45,3 +45,85 @@ Test exact de Fisher (**juste pour voir car pas besoin ici**) :
 fisher.test(smp$ed, smp$dep.cons)
 ```
 
+
+
+
+## Comparaison de 2 moyennes
+
+Test de Student
+
+Prérequis :
+
+- normalité
+- variances égales selon Welsh
+- au moins 30 individus
+
+
+```{r}
+hist(smp$age)
+```
+
+Mesure de l'écart à la normalité :
+```{r}
+qqnorm(smp$age)
+qqline(smp$age)
+```
+
+Egalité des variances :
+```{r}
+by(smp$age, smp$suicide.past, sd, na.rm = TRUE)
+```
+
+
+Tst proprement dit :
+(`var.equal = TRUE` pour ne pas utiliser l'approximation de Welsh)
+```{r}
+t.test(smp$age~smp$suicide.past, var.equal = TRUE)
+```
+
+
+Si les prerequis ne vont pas, on peut utiliser un autre test :
+```{r}
+wilcox.test(smp$age~smp$suicide.past)
+```
+
+
+
+## Tester la nullité d'un coef de corrélation (Pearson)
+
+condition de validité :
+
+- distribution suivant une loie normale pour au moins UNE des 2 variables
+
+
+```{r}
+cor.test(smp$age, smp$rs)
+```
+
+Test à partir des rangs (plus robuste, mais un peu moins puissant...) :
+```{r}
+cor.test(smp$age, smp$rs, method = "spearman")
+```
+
+
+### Autres tests :
+
+Comparaison à une moyenne de référence :
+(Ho: égalité des moyennes)
+```{r}
+t.test(smp$age, mu = 24)
+```
+
+
+Test pour les situations avant / après sur des var quali :
+```{r}
+mcnemar.test(var.avant, var.apres)
+```
+
+
+Même test sur un variable quantitative :
+```{r}
+t.test(var.avant, var.apres, paired = TRUE)
+```
+
+

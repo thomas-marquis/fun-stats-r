@@ -1,0 +1,76 @@
+---
+title: "week3Lab4"
+output: html_document
+---
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+```{r}
+tab <- table(smp$subst.cons, smp$abus)
+tab
+```
+
+margin = 1 => proportions en ligne
+margin = 2 => proportion en colonne
+
+```{r}
+prop.table(tab, margin = 1)
+```
+
+```{r}
+barplot(tab, beside = TRUE)
+```
+
+
+
+```{r}
+res <- chisq.test(tab)
+res
+```
+
+
+```{r}
+res$expected
+```
+
+
+Moyenne de l'age selon la consomation de substance :
+```{r}
+table(smp$subst.cons, smp$age)
+tapply(smp$age, smp$subst.cons, mean, na.rm = TRUE)
+```
+
+
+test de student (il faudrait vérifier les prérequis...) :
+```{r}
+t.test(smp$age[smp$subst.cons == 0], smp$age[smp$subst.cons == 1], var.equal = TRUE)
+```
+
+Même résultat en utilisant une formule :
+```{r}
+t.test(age ~ subst.cons, smp)
+```
+
+Plutot que d'utiliser tapply (pour faire par exemple des moyenne conditionnelle) :
+(`na.rm = TRUE` par défaut)
+(retourne un dataframe)
+```{r}
+aggregate(age ~ subst.cons, smp, mean)
+```
+
+Utilisation des formules pour faire des graphiques :
+```{r}
+boxplot(age ~ subst.cons, smp)
+```
+
+
+```{r}
+install.packages("gplots")
+library(gplots)
+```
+
+
+

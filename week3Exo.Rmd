@@ -1,0 +1,56 @@
+---
+title: "week3Exo"
+output: html_document
+---
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+1. Après avoir construit un tableau de contingence croisant les modalités de deux variables qualitatives, nous souhaitons afficher les fréquences relatives rapportées aux totaux lignes (somme des effectifs par ligne). Quelle option doit valoir margin= de la commande prop.table() ?
+```{r}
+print(1)
+```
+
+
+2. Supposons que nous disposons d'une variable numérique x (incluant des données manquantes) et d'une variable qualitative z, stockées dans un data frame appelé d. Quelle commande permet de calculer la moyenne de x pour chaque niveau de z ?
+```{r}
+with(smp, tapply(age, subst.cons, mean, na.rm = TRUE))
+```
+
+
+3. La commande t.test(y ~ z, data=d) où y et z sont deux variables (numérique et qualitative) disponibles dans un data frame d fournit un test de Student supposant l'égalité des variances parentes.
+```{r}
+print("Non")
+```
+
+
+
+4. Dans le data frame smp, la durée d'interview médiane chez les personnes diagnostiquées comme dépressives (dep.cons = 1) est supérieure à celle des personnes diagnostiquées comme non-dépressives (dep.cons = 0) de plus de :
+```{r}
+with(smp, tapply(dur.interv, dep.cons, median, na.rm = TRUE))
+```
+
+
+
+
+5. Donner la borne inférieure d'un intervalle de confiance à 95 % pour la corrélation linéaire (Pearson) entre les variables durée d'interview (dur.interv) et âge (age) (3 chiffres après la virgule).
+```{r}
+cor.test(smp$dur.interv, smp$age)
+```
+
+
+
+6. Nous souhaitons vérifier si la durée d'interview (dur.interv) diffère sensiblement selon que les individus ont déjà effectué une tentative de suicide dans le passé ou non (suicide.past) à l'aide d'un test de Wilcoxon. Le degré de significativité du test est :
+```{r}
+wilcox.test(smp$dur.interv, smp$suicide.past)
+```
+
+
+
+
+
+
+
+
