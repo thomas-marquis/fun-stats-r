@@ -24,13 +24,16 @@ data$profession <- factor(brutData$profession, levels = prof_levels, labels = pr
 data$service <- factor(brutData$service)
 
 
-# QUESTION 1
+# QUESTION 1 : Pour les trois variables catégorielles du fichier 
+# (à vous de déterminer de quelles variables il s'agit), présentez 
+# les pourcentages de sujets relevant de chacune des modalités.
 prop.sexe <- round(prop.table(table(data$sexe)), 3) * 100
 prop.service <- round(prop.table(table(data$service)), 3) * 100
 prop.profession <- round(prop.table(table(data$profession)), 3) * 100
 
 
-# QUESTION 2
+# QUESTION 2 : Pour les autres variables, donnez de façon synthétique : 
+# moyenne, médiane, écart-type, minimum, maximum, nombre de données disponibles (non manquantes).
 desc.age <- describe(data$age, num.desc = describe.settings)
 desc.amelioration.sante <- describe(data$amelioration.sante, num.desc = describe.settings)
 desc.amelioration.moral <- describe(data$amelioration.moral, num.desc = describe.settings)
@@ -39,11 +42,12 @@ desc.score.relation <- describe(data$score.relation, num.desc = describe.setting
 desc.score.information <- describe(data$score.information, num.desc = describe.settings)
 
 
-# QUESTION 3
+# QUESTION 3 : Faites un histogramme du score de relation (score.relation).
 hist(data$score.relation, col = "cornflowerblue", xlab = "score relation")
 
 
-# QUESTION 4
+# QUESTION 4 : A l’aide de deux « boxplots », représentez côte à côte la 
+# distribution du score de relation chez les hommes et les femmes.
 boxplot(subset(data, sexe == "femme"), data = data,
         xlab = "sexe", ylab = "Nombre",
         col = "cornflowerblue", border = "cornflowerblue")

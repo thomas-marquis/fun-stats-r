@@ -1,0 +1,105 @@
+---
+title: "week4"
+output: html_document
+---
+
+# Régressions linéraire et logistique
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+## Régression linéaire simple
+
+`jitter` ajoute du bruit
+`week4` configurer la qté de bruit
+```{r}
+plot(jitter(smp$age), jitter(smp$dur.interv, factor = 4))
+model <- lm(smp$dur.interv ~ smp$age)
+abline(model, lwd = 2, col = "red")
+```
+
+```{r}
+summary(model)
+```
+
+
+
+
+## Correlation et test t
+
+
+le p de la pente de la droite peut aussi e^te calculée comme ça :
+```{r}
+cor.test(smp$dur.interv, smp$age)
+```
+
+
+Avec une variable quali :
+```{r}
+model2 <- lm(smp$dur.interv ~ smp$dep.cons)
+summary(model2)
+```
+
+Même résultats avec :
+```{r}
+t.test(smp$dur.interv ~ smp$dep.cons, var.equal = TRUE)
+```
+
+
+
+## Régression multiple et analyse de variance
+
+```{r}
+mult.model <- lm(smp$dur.interv ~ smp$age + smp$scz.cons + smp$dep.cons + smp$subst.cons)
+summary(mult.model)
+```
+
+
+Cas avec des variables quali à plus de 2 classes :
+R recode la variable catégorielle automatiquement !
+```{r}
+model.prof <- lm(smp$dur.interv ~ smp$age + smp$dep.cons + smp$scz.cons + smp$subst.cons + smp$prof)
+summary(model.prof)
+```
+
+A partir d'un proffession de référence (ici agriculteur, la première de la liste), les artisant mettent -11.48515 min à répondre en moyenne. Bon, ici c'est pas significatif. Mais il n'y a que 6 agriculteurs.
+On peut changer de référence :
+```{r}
+smp$prof <- relevel(smp$prof, ref = "ouvrier")
+
+model.prof2 <- lm(smp$dur.interv ~ smp$age + smp$dep.cons + smp$scz.cons + smp$subst.cons + smp$prof)
+summary(model.prof2)
+```
+
+Mais ça ne répond pas à la question : est-ce qu'il y a un effet de la profession sur la durée de l'entretien ?
+
+Pour ça on peut faire :
+```{r}
+drop1(model.prof2, .~., test = "F")
+```
+
+
+Etude de la synérgie entre les variables :
+```{r}
+model.syn <- lm(smp$dur.interv ~ smp$age + smp$dep.cons * smp$subst.cons + smp$scz.cons)
+summary(model.syn)
+```
+
+**Attention** On ne peut plus regarder isolément les 2 lignes dep et subst
+
+
+**ANOVA = cas particulier de régression linéaire multiple**
+
+
+Vérification de la condition d'application du model : normalité du bruit
+```{r}
+hist(resid(model), col = "cyan", main = "")
+```
+
+
+
+
+
+
