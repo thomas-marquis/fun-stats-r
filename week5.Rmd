@@ -1,0 +1,133 @@
+---
+title: "week5"
+author: "Thomas"
+date: "6 avril 2019"
+output: html_document
+---
+
+```{r}
+alcool <- read.csv2("./data/alcool.csv")
+smp <- read.csv2("./data/smp2.csv")
+```
+
+```{r}
+install.packages("survival")
+install.packages("magrittr")
+install.packages("corrplot")
+
+library(survival)
+library(magrittr)
+library(corrplot)
+```
+
+
+
+# Données sensurées
+
+```{r}
+plot(
+  survfit(
+    Surv(alcool$t, alcool$SEVRE)
+    ~ 1
+  ), 
+  main = "Courbe de maintien de l'abstinece",
+  mark.time = TRUE
+)
+```
+
+Même courbe mais en différentiant les hommes et les femmes
+```{r}
+plot(
+  survfit(
+    Surv(alcool$t, alcool$SEVRE)
+    ~ alcool$SEXE
+  ),
+  col = c("blue", "red"),
+  main = "Courbe de maintien de l'abstinece",
+  mark.time = TRUE
+)
+```
+
+Calcul de la médiane de survie : moment ou l'évenement est survenu sur 50% des individus
+```{r}
+survfit(Surv(alcool$t, alcool$SEVRE) ~ 1)
+```
+Ici on en a pas puisque à la fin de l'étude, plus de 50% des individus sont toujours sevrés
+
+
+# Tests statistiques
+
+
+Tester l'association avec une variables qualitative comme le sexe :
+```{r}
+survdiff(Surv(alcool$t, alcool$SEVRE) ~  alcool$SEXE)
+```
+p = 0.9 => pas de différences significatives
+
+Tester l'association avec une variable quantitative, comme l'age, avec le modèle de Cox
+```{r}
+coxph(Surv(alcool$t, alcool$SEVRE) ~ alcool$AGE)
+```
+p = 0.047, donc on peut dire qu'il y a une corrélation significative entre l'age et le risque de rechute de la maladie alcoolique. D'après le coef (0.0467) l'age à tendance à protéger du risque de rechute.
+
+Maintenant, avec tous les facteurs :
+```{r}
+cox <- coxph(Surv(alcool$t, alcool$SEVRE) ~ alcool$AGE + alcool$EDVNEG + alcool$SEXE)
+cox
+```
+Interprétation :
+Seul l'age semble lié stétistiquement au risuqe de rechute
+Sexe et évènnements de vie négatifs ne sont pas très significatifs : peu de femmes et peu d'individus avec un évènnement de vie négatif.
+
+Calcul du hazard ratio (raport des risques instantanés de rechute) :
+```{r}
+exp(coef(cox))
+```
+
+**Vérification des conditions de validité :**
+
+- un nombre "suffisant" d'évènnements (5 à 10 par modalité)
+- vérifier l'hypothèse des risques instantanés :
+
+L'intruction `par` permet de fragmenter la fenêtre graphique de R
+```{r}
+par(mfrow = c(2, 2))
+plot(cox.zph(cox))
+```
+Il faut que les points soient les plus alignés horizontalement possible. C'est le cas ici.
+
+
+
+# Introduction à l'analyse multidimentionnelle
+
+On utilise l'étude santé mentale en prison.
+On ne peut faire ce type d'analyse que sur des variables quantitatives
+```{r}
+var <- c(
+  "age",
+  "n.enfant",
+  "scz.cons",
+  "dep.cons",
+  "grav.cons",
+  "rs",
+  "ed",
+  "dr"
+)
+correl <- cor(smp[, var], use = "complete.obs")
+round(correl, digits = 3)
+```
+
+Gestion des données manquantes :
+
+- "compele.obs" => ne tient compte que des individus n'ayant AUCUNE valeur manquante dans les variables choisies
+- "pairwise.complete.obs"
+
+Pour avoir une vision un peu plus graphique, on peu utiliser :
+```{r}
+corrplot(correl, method = "circle")
+```
+
+
+
+
+
