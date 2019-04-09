@@ -50,6 +50,6 @@ hist(data$score.relation, col = "cornflowerblue", xlab = "score relation")
 # distribution du score de relation chez les hommes et les femmes.
 boxplot(subset(data, sexe == "femme"), data = data,
         xlab = "sexe", ylab = "Nombre",
-        col = "cornflowerblue", border = "cornflowerblue")
+        col = "cornflowerblue", border = "cornflowerblue", beside = TRUE)
 
 

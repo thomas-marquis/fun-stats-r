@@ -1,0 +1,66 @@
+---
+title: "week4Lab5"
+output: html_document
+---
+
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+```{r}
+smp2 <- subset(smp, prof == "sans emploi" | prof == "prof.intermediaire" | prof == "cadre", c("age", "n.enfant", "prof"))
+```
+
+```{r}
+smp2$prof <- factor(smp2$prof)
+summary(smp2)
+```
+
+```{r}
+aggregate(n.enfant ~ prof, data = smp2, mean)
+```
+
+```{r}
+boxplot(n.enfant ~ prof, data = smp2)
+```
+
+```{r}
+model <- lm(n.enfant ~ prof, data = smp2)
+drop1(model, test = "F")
+```
+
+```{r}
+model2 <- lm(n.enfant ~ age, data = smp, subset = prof == "sans emploi" | prof == "prof.intermediaire" | prof == "cadre")
+summary(model2, test = "F")
+```
+
+
+```{r}
+coef(model2)
+model2$coefficients #idem
+```
+
+```{r}
+confint(model2)
+```
+
+
+```{r}
+anova(model)
+```
+
+
+```{r}
+predict(model2, data.frame(age = c(20, 30, 40)), interval = "confidence")
+```
+
+
+```{r}
+smp$n.enfant.bin <- ifelse(smp$n.enfant > 2, 1, 0)
+
+g.model <- glm(n.enfant.bin ~ age, data = smp, family = binomial("logit"))
+exp(g.model$coefficients)
+```
+

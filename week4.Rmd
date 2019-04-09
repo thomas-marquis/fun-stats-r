@@ -100,6 +100,75 @@ hist(resid(model), col = "cyan", main = "")
 
 
 
+## Intro régression logistique
+
+
+Formule :
+**log(P(Y = 1)/(1 - P(Y = 1))) = a + bX1 + cX2 + ...**
+
+Explication du risque suicidaire en fonction d'abus durant l'enfance :
+```{r}
+model.log <- glm(smp$suicide.hr ~ smp$abus, family = "binomial")
+summary(model.log)
+```
+
+```{r}
+install.packages("Epi")
+library(Epi)
+```
+
+Lien avec l'odd ratio
+```{r}
+coef.abus <- model.log$coefficients["smp$abus"]
+exp(coef.abus)
+```
+
+```{r}
+twoby2(1 - smp$suicide.hr, 1 - smp$abus)
+```
+
+```{r}
+exp(1.95)
+```
+
+
+
+## Régression logistique multiple
+
+
+Un haut rique suicidaire est t-il associé à :
+
+- mesures dicsiplinaires
+- abus dans l'enfance
+- durée incarcération
+
+
+```{r}
+model.log2 <- glm(smp$suicide.hr ~ smp$abus + smp$discip + smp$duree, family = "binomial")
+summary(model.log2)
+```
+
+
+```{r}
+print(exp(model.log2$coefficients))
+```
+
+
+Conditions de validité :
+
+- 5 à 10 évènnements / var X
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
