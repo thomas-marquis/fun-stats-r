@@ -48,7 +48,7 @@ hist(data$score.relation, col = "cornflowerblue", xlab = "score relation")
 
 # QUESTION 4 : A l’aide de deux « boxplots », représentez côte à côte la 
 # distribution du score de relation chez les hommes et les femmes.
-boxplot(subset(data, sexe == "femme"), data = data,
+boxplot(data$score.relation  ~  data$sexe,
         xlab = "sexe", ylab = "Nombre",
         col = "cornflowerblue", border = "cornflowerblue", beside = TRUE)
 
