@@ -144,7 +144,7 @@ Un haut rique suicidaire est t-il associé à :
 
 
 ```{r}
-model.log2 <- glm(smp$suicide.hr ~ smp$abus + smp$discip + smp$duree, family = "binomial")
+model.log2 <- glm(smp$suicide.hr ~ smp$abus + smp$discip + smp$duree, family = binomial)
 summary(model.log2)
 ```
 

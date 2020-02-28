@@ -98,6 +98,8 @@ Il faut que les points soient les plus alignés horizontalement possible. C'est 
 
 
 
+
+
 # Introduction à l'analyse multidimentionnelle
 
 On utilise l'étude santé mentale en prison.
@@ -126,6 +128,120 @@ Pour avoir une vision un peu plus graphique, on peu utiliser :
 ```{r}
 corrplot(correl, method = "circle")
 ```
+
+
+
+
+# Analyse en composante principale
+
+
+On passe de la matrice de corrélation à la matrice de distances en faisant :
+`d = sqrt(2 * (1 - r))`
+On peut établir une équivalence entre cette matrice et des points placés sur une hypersphère.
+
+```{r}
+install.packages("psy")
+library(psy)
+```
+
+```{r}
+var.acp <- c(
+  "age",
+  "n.enfant",
+  "scz.cons",
+  "dep.cons",
+  "grav.cons",
+  "rs",
+  "ed",
+  "dr"
+)
+```
+
+Matrice de distance la main :
+```{r}
+corMat <- round(cor(smp[, var.acp], use = "complete.obs"), digits = 2)
+distMat <- round(sqrt(2 * (1 - corMat)), digits = 2)
+distMat
+```
+
+
+```{r}
+mdspca(smp[, var.acp])
+```
+
+La somme des 2 pourcentages en haut à droite = pourcentage de la variance contenu dans la matrice de correlation et représenté sur le graphique.
+= pourcentage d'information représenté sur le graphique (ordre de grandeur)
+
+
+Représentation sphérique :
+```{r}
+sphpca(smp[, var.acp], v = 50)
+```
+Meilleur représentation ! Mais difficile d'évaluer la représentativité des points
+
+
+Méthode ACP focalisée :
+
+Pour évaluer une variable à expliqué vs des variables explicatives
+```{r}
+var.acp.y <- "grav.cons"
+var.acp.x <- c(
+  "age",
+  "n.enfant",
+  "scz.cons",
+  "dep.cons",
+  "rs",
+  "ed",
+  "dr"
+)
+```
+```{r}
+fpca(data = smp, y = var.acp.y, x = var.acp.x, partial = "No")
+```
+
+Point orange = corrélation négative
+Point vert = corrélation positive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

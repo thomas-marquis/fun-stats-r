@@ -1,0 +1,54 @@
+---
+title: "week4Exo"
+output: html_document
+---
+
+```{r}
+smp <- read.csv2("./data/smp2.csv")
+```
+
+
+
+4. Nous considérons l'âge (age) des individus ayant 4 enfants ou plus (n.enfant) et dont la catégorie socio-professionnelle (prof) figure parmi les modalités suivantes : « sans emploi », « ouvrier », « cadre » et « employé ». Pour ce sous-ensemble de l'échantillon du data frame smp, le rapport entre les deux variances les plus extrêmes dans ces 4 groupes est :
+```{r}
+smp$prof <- factor(smp$prof)
+sub <- subset(
+  smp,
+  n.enfant > 3 
+    & (prof == "sans emploi" | prof == "employe" | prof == "ouvrier" | prof == "cadre"),
+  c("age", "n.enfant", "prof")
+)
+
+aggregate(age ~ prof, data = sub, sd)
+```
+
+
+5. Nous souhaitons réaliser une ANOVA à un facteur en considérant l'âge (age) comme variable réponse, et la taille de la fratrie (n.fratrie) recodée en 3 classes (0-2, 3-4, 5+) comme variable explicative. Les bornes des intervalles sont inclues pour chacune des trois classes. Indiquer le résultat du test F de Fisher-Snedecor d’égalité des moyennes :
+```{r}
+smp$n.fratrie.a <- factor(ifelse(smp$n.fratrie > 2,
+                          ifelse(smp$n.fratrie > 4, "5+", "3-5"),
+                          "0-2"))
+
+model <- lm(
+  data = smp, 
+  formula = age ~ n.fratrie.a
+)
+anova(model)
+```
+
+
+
+6. Nous nous intéressons à la relation entre la variable séparation (separation) et l'âge (age) des individus, que l'on modélise à l'aide d'une régression logistique. Donner la borne inférieure de l'intervalle de confiance à 95 % pour l'odds-ratio (3 chiffres après la virgule).
+```{r}
+logistic <- glm(data = smp, formula = separation ~ age, family = binomial)
+summary(logistic)
+```
+```{r}
+install.packages("Epi")
+library(Epi)
+```
+
+```{r}
+twoby2(1 - smp$separation, 1)
+```
+
